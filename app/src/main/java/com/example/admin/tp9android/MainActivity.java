@@ -4,14 +4,21 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
+
+    protected int i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        TextView textView = (TextView) findViewById(R.id.text);
+        textView.setText(String.valueOf(i));
         Toast toast = Toast.makeText(this, R.string.create, Toast.LENGTH_LONG);
         toast.show();
     }
@@ -41,12 +48,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         notify("onRestoreInstanceState");
+        int save = savedInstanceState.getInt("int", i);
+        i = save;
+        TextView textView = (TextView) findViewById(R.id.text);
+        textView.setText(String.valueOf(i));
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onRestoreInstanceState(outState);
         notify("onSaveInstanceState");
+        outState.putInt("int", i);
     }
 
     private void notify(String methodName) {
@@ -58,5 +70,11 @@ public class MainActivity extends AppCompatActivity {
                 .setContentText(name).build();
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify((int) System.currentTimeMillis(), noti);
+    }
+
+    public void onClick(View view) {
+        i += 1;
+        TextView textView = (TextView) findViewById(R.id.text);
+        textView.setText(String.valueOf(i));
     }
 }
